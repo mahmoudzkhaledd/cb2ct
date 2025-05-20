@@ -13,17 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StudyStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
 model Study {
-  id          String   @id @default(cuid())
-  patientName String
-  studyDate   DateTime
-  description String
-  modality    String
-  MRN         String
-  instances   Int
-  imageUrl    String
-  userId      String
-  createdAt   DateTime @default(now())
+  id String @id @default(cuid())
+
+  status        StudyStatus @default(PENDING)
+  description   String
+  failerReason  String?
+  filesIds      String[]
+  resultFileIds String[]
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+  createdAt     DateTime    @default(now())
 
   @@index([userId])
 }
@@ -38,6 +45,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  Study         Study[]
 
   @@unique([email])
   @@map("user")
@@ -86,4 +94,21 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Configs {
+  id               String @id @default(cuid())
+  rabbitmqHost     String
+  rabbitmqPort     Int
+  rabbitmqUsername String
+  rabbitmqPassword String
+  rabbitmqVhost    String
+
+  orthancHost     String
+  orthancPort     Int
+  orthancUsername String
+  orthancPassword String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

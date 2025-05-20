@@ -4,8 +4,11 @@ import { redirect } from "next/navigation";
 import { ZodSchema, infer as ZodInfer } from "zod";
 
 import { getServerSession } from "./auth-client";
-import { Session } from "better-auth";
-type User = Session;
+import { Session, User } from "better-auth";
+type UserType = {
+  session: Session;
+  user: User;
+};
 export const serverAction = <T extends ZodSchema<any> | undefined, R, U>(
   withAuth: boolean,
   actionOrSchema: T | ((user: U, data?: any) => Promise<R>),
@@ -54,24 +57,24 @@ export const serverAction = <T extends ZodSchema<any> | undefined, R, U>(
 
 export class ServerAction {
   static auth<T extends ZodSchema<any> | undefined, R>(
-    actionOrSchema: T | ((user: User, data?: any) => Promise<R>),
+    actionOrSchema: T | ((user: UserType, data?: any) => Promise<R>),
     maybeAction?: (
-      user: User,
+      user: UserType,
       data: T extends ZodSchema<any> ? ZodInfer<T> : undefined,
     ) => Promise<R>,
   ) {
-    return serverAction<T, R, User>(true, actionOrSchema, maybeAction);
+    return serverAction<T, R, UserType>(true, actionOrSchema, maybeAction);
   }
 
   // Update withSubscription to include the subscription parameter in action function
   static withSubscription<T extends ZodSchema<any> | undefined, R>(
-    actionOrSchema: T | ((user: User, data: any | undefined) => Promise<R>),
+    actionOrSchema: T | ((user: UserType, data: any | undefined) => Promise<R>),
     maybeAction?: (
-      user: User,
+      user: UserType,
       data: T extends ZodSchema<any> ? ZodInfer<T> : undefined,
     ) => Promise<R>,
   ) {
-    return serverAction<T, R, User>(
+    return serverAction<T, R, UserType>(
       true,
       typeof actionOrSchema == "function"
         ? (user, data) => actionOrSchema(user, data)
@@ -82,12 +85,16 @@ export class ServerAction {
   }
 
   static pass<T extends ZodSchema<any> | undefined, R>(
-    actionOrSchema: T | ((user: User | null, data?: any) => Promise<R>),
+    actionOrSchema: T | ((user: UserType | null, data?: any) => Promise<R>),
     maybeAction?: (
-      user: User | null,
+      user: UserType | null,
       data: T extends ZodSchema<any> ? ZodInfer<T> : undefined,
     ) => Promise<R>,
   ) {
-    return serverAction<T, R, User | null>(false, actionOrSchema, maybeAction);
+    return serverAction<T, R, UserType | null>(
+      false,
+      actionOrSchema,
+      maybeAction,
+    );
   }
 }

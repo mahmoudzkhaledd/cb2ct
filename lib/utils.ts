@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, StudyStatus } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { number, ZodError } from "zod";
@@ -25,6 +25,19 @@ export function isUrlMatching(url: string, routes: Array<String>) {
   }
   return false;
 }
+export const getStatusColor = (status: StudyStatus) => {
+  switch (status) {
+    case "COMPLETED":
+      return "bg-green-500";
+    case "IN_PROGRESS":
+      return "bg-blue-500";
+    case "FAILED":
+      return "bg-red-500";
+    case "PENDING":
+    default:
+      return "bg-yellow-500";
+  }
+};
 export function handlePrismaError(error: any): string | null {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {

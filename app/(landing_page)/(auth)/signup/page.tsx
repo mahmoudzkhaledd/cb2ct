@@ -39,6 +39,7 @@ export default function LoginPage() {
         toast.error(res.error.message);
         return;
       }
+      window.location.href = "/dashboard/home";
     });
   };
   return (
@@ -76,7 +77,7 @@ export default function LoginPage() {
                     />
 
                     <Button loading={loading} type="submit" className="w-full">
-                      Login
+                      Create account
                     </Button>
                   </div>
                   <div className="mt-4 text-center text-sm">

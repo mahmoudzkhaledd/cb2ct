@@ -1,4 +1,4 @@
-export const publicRoutes: Array<String> = ["/", "/pricing"];
+export const publicRoutes: Array<String> = ["/", "/test"];
 export const apiRoutes: Array<string> = [];
 export const authRoutes: Array<String> = [
   "/login",
