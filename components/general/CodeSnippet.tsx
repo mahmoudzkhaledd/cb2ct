@@ -65,7 +65,7 @@ export default function CodeSnippet({
             onClick={copyText}
             type="button"
             className={cn(
-              "absolute end-0 top-0 inline-flex items-center justify-center rounded-md border border-r",
+              "absolute end-0 top-0 inline-flex items-center justify-center rounded-md border border-r bg-white",
               {
                 "top-0 translate-y-0 border": area,
               },

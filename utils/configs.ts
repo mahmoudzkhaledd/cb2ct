@@ -10,6 +10,9 @@ const defaultConfigs: Configs = {
   orthancPort: 8000,
   orthancUsername: "orthanc",
 
+  socketIoHost: "http://localhost",
+  socketIoPort: 5000,
+
   rabbitmqHost: "localhost",
   rabbitmqPort: 5672,
   rabbitmqUsername: "user",

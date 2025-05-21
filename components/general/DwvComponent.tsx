@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import axios from "axios";
 import { FileProps } from "../providers/DwvFilesProvider";
 import { useConfigs } from "../providers/ConfigsProvider";
+import { cn } from "@/lib/utils";
 
 // Image decoders (for web workers)
 decoderScripts.jpeg2000 = `${process.env.NEXT_PUBLIC_URL}/assets/dwv/decoders/pdfjs/decode-jpeg2000.js`;
@@ -26,6 +27,8 @@ const DwvComponent = ({
   dropBoxId,
   inputId,
   linkId,
+  className,
+  layerClassName,
   removeAllFiles,
 }: {
   urls?: string[];
@@ -36,6 +39,8 @@ const DwvComponent = ({
   dropBoxId?: string;
   inputId?: string;
   linkId?: string;
+  className?: string;
+  layerClassName?: string;
 }) => {
   const [tools] = useState<{ [key: string]: ToolConfig }>({
     Scroll: {
@@ -284,51 +289,6 @@ const DwvComponent = ({
     showDropbox(true);
   };
 
-  const defaultHandleDragEvent = (event: DragEvent) => {
-    // prevent default handling
-    event.stopPropagation();
-    event.preventDefault();
-  };
-
-  const onBoxDragOver = (event: DragEvent) => {
-    defaultHandleDragEvent(event);
-
-    const box = document.getElementById(dropboxDivId);
-    if (box && box.className.indexOf(hoverClassName) === -1) {
-      box.className += " " + hoverClassName;
-    }
-  };
-
-  const onBoxDragLeave = (event: DragEvent) => {
-    defaultHandleDragEvent(event);
-
-    const box = document.getElementById(dropboxDivId);
-    if (box && box.className.indexOf(hoverClassName) !== -1) {
-      box.className = box.className.replace(" " + hoverClassName, "");
-    }
-  };
-
-  /**
-   * Handle a drop event.
-   */
-  const onDrop = (event: DragEvent) => {
-    defaultHandleDragEvent(event);
-    // load files
-    if (dwvAppRef.current && event.dataTransfer && event.dataTransfer.files) {
-      const arr = Array.from(event.dataTransfer.files);
-      if (onAddFiles)
-        onAddFiles(
-          arr.map((file) => ({
-            id: Math.random().toString(36).substring(2, 15),
-            name: file.name,
-            file: file,
-            progress: 0,
-          })),
-        );
-      dwvAppRef.current.loadFiles(arr);
-    }
-  };
-
   /**
    * Handle a an input[type:file] change event.
    */
@@ -395,16 +355,6 @@ const DwvComponent = ({
       }
       // show box
       box.setAttribute("style", "display:initial");
-      // stop layer listening
-      if (layerDiv) {
-        layerDiv.removeEventListener("dragover", defaultHandleDragEvent);
-        layerDiv.removeEventListener("dragleave", defaultHandleDragEvent);
-        layerDiv.removeEventListener("drop", onDrop);
-      }
-      // listen to box events
-      box.addEventListener("dragover", onBoxDragOver as any);
-      box.addEventListener("dragleave", onBoxDragLeave as any);
-      box.addEventListener("drop", onDrop as any);
     } else {
       // remove border css class
       box.className = dropboxClassName;
@@ -412,21 +362,11 @@ const DwvComponent = ({
       box.innerHTML = "";
       // hide box
       box.setAttribute("style", "display:none");
-      // stop box listening
-      box.removeEventListener("dragover", onBoxDragOver as any);
-      box.removeEventListener("dragleave", onBoxDragLeave as any);
-      box.removeEventListener("drop", onDrop as any);
-      // listen to layer events
-      if (layerDiv) {
-        layerDiv.addEventListener("dragover", defaultHandleDragEvent);
-        layerDiv.addEventListener("dragleave", defaultHandleDragEvent);
-        layerDiv.addEventListener("drop", onDrop);
-      }
     }
   };
 
   return (
-    <div id={id ?? "dwv"} className="flex-1">
+    <div id={id ?? "dwv"} className={cn("flex-1", className)}>
       <div style={{ width: "100%", height: "4px", backgroundColor: "#ddd" }}>
         <div
           style={{
@@ -493,7 +433,10 @@ const DwvComponent = ({
 
       <div
         id={layerId ?? "layerGroup0"}
-        className="layerGroup h-[600px] w-full overflow-hidden rounded-lg border bg-black"
+        className={cn(
+          "layerGroup h-[600px] w-full overflow-hidden rounded-lg border bg-black",
+          layerClassName,
+        )}
       />
       <div id={dropBoxId ?? "dropBox"}></div>
       {dataLoaded && (

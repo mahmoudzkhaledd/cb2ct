@@ -17,22 +17,8 @@ export default async function DashboardLayout({
 
   return (
     <ConfigsProvider configs={configs}>
-      <SidebarProvider
-        defaultOpen={cookieStore.get("sidebar")?.value === "true"}
-        className="relative"
-        style={
-          {
-            "--sidebar-width": "calc(var(--spacing) * 72)",
-            "--header-height": "calc(var(--spacing) * 12)",
-          } as React.CSSProperties
-        }
-      >
-        <AppSidebar className="p-0" variant="inset" />
-        <SidebarInset className="mb-0">
-          <SiteHeader />
-          <main className="h-full p-4 lg:p-6">{children}</main>
-        </SidebarInset>
-      </SidebarProvider>
+      <SiteHeader />
+      <main className="h-full p-4 lg:p-6">{children}</main>
     </ConfigsProvider>
   );
 }

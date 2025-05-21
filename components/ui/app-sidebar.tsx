@@ -20,7 +20,6 @@ import { NavMain } from "./nav-main";
 import Logo from "../general/Logo";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const session = useSession();
   return (
     <Sidebar
       collapsible="offcanvas"

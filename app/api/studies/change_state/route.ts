@@ -17,6 +17,7 @@ export const POST = async (req: NextRequest) => {
         status: model.state,
         failerReason: model.failerReason,
         resultFileIds: model.resultIds,
+        metadata: model.metadata,
       },
     });
     return NextResponse.json({

@@ -27,50 +27,5 @@ export const sidebarItems: Record<string, SidebarItem[]> = {
       url: "/dashboard/home",
       icon: IconDashboard,
     },
-    {
-      title: "subscriptions",
-      url: "/dashboard/subscriptions",
-      icon: IconChartLine,
-      collapse: true,
-    },
-    {
-      title: "all_subscribers",
-      url: "/dashboard/all-subscribers",
-      icon: IconUsers,
-    },
-
-    {
-      title: "plans",
-      url: "/pricing",
-      icon: IconCube,
-    },
-    {
-      title: "calendar",
-      url: "/dashboard/calendar",
-      icon: IconCalendar,
-    },
-    {
-      title: "points",
-      url: "/dashboard/points",
-      icon: IconCoins,
-    },
-    {
-      title: "settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
-    },
-  ],
-
-  navSecondary: [
-    {
-      title: "invoices",
-      url: "/dashboard/invoices",
-      icon: IconInvoice,
-    },
-    {
-      title: "settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
-    },
   ],
 };
